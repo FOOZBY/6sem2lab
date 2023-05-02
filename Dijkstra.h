@@ -3,30 +3,39 @@
 void Dijkstra(int **GR,int N, int st)
 {
 	int* distance = new int[N];//массив дистанций до грани
-	int count, index, i, u, m = st + 1;// count - , index - , i - , u - , m = 
+	int count, index, u, m = st + 1;// count - проходимся по всем вершинам, кроме последней, index - индекс элемента, имеющего минимальное расстояние до стартовой вершины,
+	//m = для упрощения вывода
 	bool *visited = new bool[N];//массив отвечающий за посещённость граней
-	for (i = 0; i < N; i++)
+	for (int i = 0; i < N; i++)
 	{
 		distance[i] = INT_MAX; visited[i] = false;
 	}
 	distance[st] = 0;
-	for (count = 0; count < N - 1; count++)
+	for (count = 0; count < N - 1; count++)//N-1 так как когда остаётся одна непосещённая вершина, то уже никак не изменить расстояние до неё
 	{
 		int min = INT_MAX;
-		for (i = 0; i < N; i++)
+		for (int i = 0; i < N; i++)//находим из непосещённых вершин ту, у которой самая маленькая дистанция до стартовой вершины
 			if (!visited[i] && distance[i] <= min)
 			{
-				min = distance[i]; index = i;
+				min = distance[i]; u = i;
 			}
-		u = index;
-		visited[u] = true;
-		for (i = 0; i < N; i++)
-			if (!visited[i] && GR[u][i] && distance[u] != INT_MAX &&
-				distance[u] + GR[u][i] < distance[i])
+		//u - вершина(непосещённая) с минимальным расстоянием до стартовой вершины, стартовая вершина в первом прогоне
+		visited[u] = true;// отмечаем вершину как посещённую
+		for (int i = 0; i < N; i++)
+			/*если вершина непосещённая
+			есть расстояние между двумя рассматриваемыми вершинами
+			расстояние от стартовой точки до рассматриваемой не бесконечность
+			сумма расстояния от ст. точки и ребра от этой точки до следующей(i) меньше,
+			чем расстояние от ст. точки до точки i,
+			ТО пересчитываем расстояние от ст. точки до точки i*/
+			
+			if (!visited[i] && GR[u][i] && distance[u] != INT_MAX && distance[u] + GR[u][i] < distance[i])
+			{
 				distance[i] = distance[u] + GR[u][i];
+			}
 	}
 	cout << "Стоимость пути из начальной вершины до остальных:\t\n";
-	for (i = 0; i < N; i++) if (distance[i] != INT_MAX)
+	for (int i = 0; i < N; i++) if (distance[i] != INT_MAX)
 		cout << m << " > " << i + 1 << " = " << distance[i] << endl;
 	else cout << m << " > " << i + 1 << " = " << "маршрут недоступен" << endl;
 }
@@ -34,59 +43,32 @@ void Dijkstra(int **GR,int N, int st)
 
 void my_dij(int** graph, int N, int start)
 {
-	//graph - матрица расстояний между гранями, N - кол-во граней, start - грань, от которой ведут отчёт
-	int* distance = new int[N];//массив длин путей до конкретной грани
-	bool* visited = new bool[N];//массив посещаемости
+	int* dist = new int[N];
+	binaryheap q;
 	for (int i = 0; i < N; i++)
 	{
-		distance[i] = INT_MAX;//по умолчанию расстояние до любой грани очень большое, бесконечность в идеале
-		visited[i] = 0;//ни одна грань не посещена
+		dist[i] = INT_MAX;
 	}
-	distance[start] = 0;// расстояние из стартовой грани равно 0, мы итак в ней
-	int minindex, min, temp;
-	do 
+	dist[start] = 0;
+	q.push(dist[start], start);
+	while (!q.empty())
 	{
-		for (int  i = 0; i < N; i++)
-		{
-			cout << "d: " << i << " = " << distance[i] << endl;
-		}
+		pair<int, int> u = q.top();
+		q.pop();
 		for (int i = 0; i < N; i++)
 		{
-			cout << "v: " << i << " = " << visited[i] << endl;
-		}
-		cout << endl;
-		minindex = INT_MAX;
-		min = INT_MAX;
-		for (int i = 0; i < N; i++)
-		{ // Если вершину ещё не обошли и вес меньше min
-			if ((!visited[i]) && (distance[i] < min))
-			{ // Переприсваиваем значения
-				min = distance[i];
-				minindex = i;
-			}
-		}
-		// Добавляем найденный минимальный вес
-		// к текущему весу вершины
-		// и сравниваем с текущим минимальным весом вершины
-		if (minindex != INT_MAX)
-		{
-			for (int i = 0; i < N; i++)
+			if (graph[u.second][i])
 			{
-				if (graph[minindex][i] > 0)//есть путь из minindex в i
+				int alt = dist[u.second] + graph[u.second][i];
+				if (alt < dist[i])
 				{
-					temp = min + graph[minindex][i];
-					if (temp < distance[i])
-					{
-						distance[i] = temp;
-					}
+					dist[i] = alt;
+					q.push(alt, i);
 				}
 			}
-			visited[minindex] = 1;
 		}
-	} while (minindex < INT_MAX);
-
-	cout << "Стоимость пути из начальной вершины до остальных:\t\n";
-	for (int i = 0; i < N; i++) if (distance[i] != INT_MAX)
-		cout << start+1 << " > " << i + 1 << " = " << distance[i] << endl;
-	else cout << start+1 << " > " << i + 1 << " = " << "маршрут недоступен" << endl;
+	}
+	for (int i = 0; i < N; i++) if (dist[i] != INT_MAX)
+		cout << start+1 << " > " << i + 1 << " = " << dist[i] << endl;
+	else cout << start + 1 << " > " << i + 1 << " = " << "маршрут недоступен" << endl;
 }

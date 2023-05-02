@@ -57,13 +57,11 @@ void my_dij(int** graph, int N, int start)
 		q.pop();
 		for (int i = 0; i < N; i++)
 		{
-			if (graph[u.second][i])
+			if (graph[u.second][i] && dist[u.second] + graph[u.second][i])
 			{
-				int alt = dist[u.second] + graph[u.second][i];
-				if (alt < dist[i])
 				{
-					dist[i] = alt;
-					q.push(alt, i);
+					dist[i] = dist[u.second] + graph[u.second][i];
+					q.push(dist[i], i);
 				}
 			}
 		}

@@ -29,8 +29,11 @@ int main()
 			cout << Graph[i][j] << " ";
 		cout << endl;
 	}
-	my_dij(Graph, N, start_point-1);
 
+	cout << "binary heap: " << endl;
+	my_dij_bin(Graph, N, start_point-1);
+	cout << endl << "fib heap: " << endl;
+	my_dij_fib(Graph, N, start_point - 1);
 	
 	system("pause");
 }

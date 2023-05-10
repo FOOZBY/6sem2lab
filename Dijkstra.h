@@ -41,7 +41,7 @@ void Dijkstra(int **GR,int N, int st)
 }
 
 
-void my_dij(int** graph, int N, int start)
+void my_dij_bin(int** graph, int N, int start)
 {
 	int* dist = new int[N];
 	binaryheap q;
@@ -57,7 +57,8 @@ void my_dij(int** graph, int N, int start)
 		q.pop();
 		for (int i = 0; i < N; i++)
 		{
-			if (graph[u.second][i] && dist[u.second] + graph[u.second][i])
+			int temp = graph[u.second][i];
+			if (graph[u.second][i] && dist[u.second] + graph[u.second][i] < dist[i])
 			{
 				{
 					dist[i] = dist[u.second] + graph[u.second][i];
@@ -68,5 +69,36 @@ void my_dij(int** graph, int N, int start)
 	}
 	for (int i = 0; i < N; i++) if (dist[i] != INT_MAX)
 		cout << start+1 << " > " << i + 1 << " = " << dist[i] << endl;
+	else cout << start + 1 << " > " << i + 1 << " = " << "маршрут недоступен" << endl;
+}
+
+void my_dij_fib(int** graph, int N, int start)
+{
+	int* dist = new int[N];
+	FibonacciHeap<int> q;
+	for (int i = 0; i < N; i++)
+	{
+		dist[i] = INT_MAX;
+	}
+	dist[start] = 0;
+	q.insert(dist[start], start);
+	while (!q.isEmpty())
+	{
+		int u_dist = q.getMinimum();
+		int u = q.getMinimum_dij_node();
+		q.removeMinimum();
+		for (int i = 0; i < N; i++)
+		{
+			if (graph[u][i] && dist[u] + graph[u][i] < dist[i])
+			{
+				{
+					dist[i] = dist[u] + graph[u][i];
+					q.insert(dist[i], i);
+				}
+			}
+		}
+	}
+	for (int i = 0; i < N; i++) if (dist[i] != INT_MAX)
+		cout << start + 1 << " > " << i + 1 << " = " << dist[i] << endl;
 	else cout << start + 1 << " > " << i + 1 << " = " << "маршрут недоступен" << endl;
 }

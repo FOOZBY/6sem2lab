@@ -29,11 +29,42 @@ int main()
 			cout << Graph[i][j] << " ";
 		cout << endl;
 	}
+	auto st = chrono::high_resolution_clock::now();
+	auto end = chrono::high_resolution_clock::now();
+	chrono::duration<double, micro> duration = end - st;
+	double time = 0;
 
 	cout << "binary heap: " << endl;
-	my_dij_bin(Graph, N, start_point-1);
+	int* dist = new int[N];
+	int M = 15000;
+	for (int i = 0; i < M; i++)
+	{
+		st = chrono::high_resolution_clock::now();
+		my_dij_bin(Graph, N, start_point - 1);
+		end = chrono::high_resolution_clock::now();
+		duration = end - st;
+		time += duration.count();
+	}
+	cout << "binary heap time: " << time/M << endl;
+	dist = my_dij_bin(Graph, N, start_point-1);
+	/*for (int i = 0; i < N; i++) if (dist[i] != INT_MAX)
+		cout << start_point << " > " << i + 1 << " = " << dist[i] << endl;
+	else cout << start_point << " > " << i + 1 << " = " << "маршрут недоступен" << endl;*/
+
+	time = 0;
 	cout << endl << "fib heap: " << endl;
-	my_dij_fib(Graph, N, start_point - 1);
-	
+	for (int i = 0; i < M; i++)
+	{
+		st = chrono::high_resolution_clock::now();
+		my_dij_fib(Graph, N, start_point - 1);
+		end = chrono::high_resolution_clock::now();
+		duration = end - st;
+		time += duration.count();
+	}
+	cout << "fib heap time: " << time / M << endl;
+	dist = my_dij_fib(Graph, N, start_point - 1);
+	/*for (int i = 0; i < N; i++) if (dist[i] != INT_MAX)
+		cout << start_point << " > " << i + 1 << " = " << dist[i] << endl;
+	else cout << start_point << " > " << i + 1 << " = " << "маршрут недоступен" << endl;*/
 	system("pause");
 }

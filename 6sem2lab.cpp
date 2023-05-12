@@ -47,9 +47,9 @@ int main()
 	}
 	cout << "binary heap time: " << time/M << endl;
 	dist = my_dij_bin(Graph, N, start_point-1);
-	/*for (int i = 0; i < N; i++) if (dist[i] != INT_MAX)
+	for (int i = 0; i < N; i++) if (dist[i] != INT_MAX)
 		cout << start_point << " > " << i + 1 << " = " << dist[i] << endl;
-	else cout << start_point << " > " << i + 1 << " = " << "маршрут недоступен" << endl;*/
+	else cout << start_point << " > " << i + 1 << " = " << "маршрут недоступен" << endl;
 
 	time = 0;
 	cout << endl << "fib heap: " << endl;
@@ -63,8 +63,8 @@ int main()
 	}
 	cout << "fib heap time: " << time / M << endl;
 	dist = my_dij_fib(Graph, N, start_point - 1);
-	/*for (int i = 0; i < N; i++) if (dist[i] != INT_MAX)
+	for (int i = 0; i < N; i++) if (dist[i] != INT_MAX)
 		cout << start_point << " > " << i + 1 << " = " << dist[i] << endl;
-	else cout << start_point << " > " << i + 1 << " = " << "маршрут недоступен" << endl;*/
+	else cout << start_point << " > " << i + 1 << " = " << "маршрут недоступен" << endl;
 	system("pause");
 }
